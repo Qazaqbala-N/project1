@@ -1,0 +1,63 @@
+import pygame
+import random
+pygame.init()
+
+screen=pygame.display.set_mode((800,600))
+
+done=False
+
+
+player_x=200
+player_y=500
+
+backgroundImage=pygame.image.load("cosmos.jpg")
+playerImage = pygame.image.load("корабль.jpg")
+enemyImage=pygame.image.load("enemy.jpg")
+
+enemy_x= random.randint(0,750)
+enemy_y=random.randint(20,50)
+
+enemy_dx=5
+enemy_dy=10
+def player(x,y):
+    screen.blit(playerImage,(x,y))
+
+def enemy(x,y):
+    screen.blit(enemyImage,(x,y))
+
+
+while not done:
+    for event in pygame.event.get():
+        #event to quit
+        if event.type==pygame.QUIT:
+            done=True
+      
+        #MOVE
+    if event.type==pygame.KEYDOWN:
+        
+        if event.key==pygame.K_LEFT:
+                player_x-=1   
+        if event.key==pygame.K_RIGHT:
+                player_x+=1
+
+
+
+   
+    screen.fill((0,0,0))
+
+
+   
+
+    enemy_x+=enemy_dx
+    
+    if enemy_x<0 or enemy_x>736:
+        enemy_dx=-enemy_dx
+        enemy_y+=enemy_dy
+    
+    screen.blit(backgroundImage,(0,0))
+    enemy(enemy_x,enemy_y)
+    player(player_x,player_y)   
+
+    pygame.display.flip()
+
+    
