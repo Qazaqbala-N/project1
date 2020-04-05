@@ -12,19 +12,27 @@ player_y=500
 
 backgroundImage=pygame.image.load("cosmos.jpg")
 playerImage = pygame.image.load("корабль.jpg")
-enemyImage=pygame.image.load("enemy.jpg")
+enemyImage=pygame.image.load("enemy.png")
+bulletImage= pygame.image.load("bullet.jpg")
 
 enemy_x= random.randint(0,750)
 enemy_y=random.randint(20,50)
 
 enemy_dx=5
-enemy_dy=10
+enemy_dy=20
+
+
+bullet_x = -100
+bullet_y = -100
+bullet_shot = False
+
 def player(x,y):
     screen.blit(playerImage,(x,y))
 
 def enemy(x,y):
     screen.blit(enemyImage,(x,y))
-
+def bullet(x,y):
+    screen.blit(bulletImage, (x,y))
 
 while not done:
     for event in pygame.event.get():
@@ -32,14 +40,6 @@ while not done:
         if event.type==pygame.QUIT:
             done=True
       
-        #MOVE
-    if event.type==pygame.KEYDOWN:
-        
-        if event.key==pygame.K_LEFT:
-                player_x-=1   
-        if event.key==pygame.K_RIGHT:
-                player_x+=1
-
 
 
    
@@ -55,6 +55,36 @@ while not done:
         enemy_y+=enemy_dy
     
     screen.blit(backgroundImage,(0,0))
+    k = pygame.key.get_pressed()
+    #Moving player
+    if k[pygame.K_RIGHT]:
+        player_x+=1
+    elif k[pygame.K_LEFT]:
+        player_x-=1
+    #Shooting
+    if k[pygame.K_SPACE] and not(bullet_shot):
+        bullet_shot = True
+        bullet_x = player_x+25-11
+        bullet_y = player_y
+    
+    #MoveBullet
+    if bullet_shot:
+        bullet_y -=8
+    #Aboard
+    if bullet_y <=0:
+        bullet_shot = False
+        bullet_x = -100
+        bullet_y = -100
+    #Collision with enemy
+    if (bullet_x >= enemy_x and bullet_x<= enemy_x + 50) and (bullet_y >= enemy_y-50 and bullet_y <= enemy_y):
+        bullet_shot = False
+        bullet_x = -100
+        bullet_y = -100
+        pygame.quit()
+    #Collison with player
+    if (player_x >= enemy_x and player_x<= enemy_x + 50) and (player_y >= enemy_y and player_y <= enemy_y+86):
+        pygame.quit()
+    bullet(bullet_x,bullet_y)
     enemy(enemy_x,enemy_y)
     player(player_x,player_y)   
 
